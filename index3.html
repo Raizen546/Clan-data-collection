@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Кланова База</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        #app-login { margin-top: 50px; }
+        #app-main { display: none; } /* Приховано до входу */
+    </style>
+</head>
+<body>
+
+    <div id="app-login">
+        <h2>Вхід до клану</h2>
+        <input type="text" id="user-nick" placeholder="Нікнейм"><br><br>
+        <input type="password" id="user-pass" placeholder="Пароль"><br><br>
+        <button onclick="login()">Увійти</button>
+    </div>
+
+    <div id="app-main">
+        <h1>Вітаємо в системі!</h1>
+        <button onclick="logout()">Вийти</button>
+        </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Твої дані (заповни їх)
+        const firebaseConfig = {
+            apiKey: "...",
+            authDomain: "...",
+            databaseURL: "...",
+            projectId: "...",
+            storageBucket: "...",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Логіка входу
+        window.login = async () => {
+            const nick = document.getElementById('user-nick').value;
+            const pass = document.getElementById('user-pass').value;
+
+            const snapshot = await get(ref(db, 'users/' + nick));
+            
+            if (snapshot.exists() && snapshot.val().password === pass) {
+                document.getElementById('app-login').style.display = 'none';
+                document.getElementById('app-main').style.display = 'block';
+            } else {
+                alert("Невірний нік або пароль!");
+            }
+        };
+
+        window.logout = () => {
+            location.reload(); // Найпростіший спосіб вийти
+        };
+    </script>
+</body>
+</html>
