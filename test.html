@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест Firebase</title>
+</head>
+<body>
+    <h1>Тест зв'язку з Firebase</h1>
+    <button id="testBtn">Натисни для тесту</button>
+    <p id="status">Очікування...</p>
+
+    <script type="module">
+        // Використовуємо CDN-посилання, це працює без npm
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Твої налаштування з останніх скриншотів
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv6piHiRaUnfL1F1iV00jyYmd3ZLzsXQY",
+            authDomain: "clan-data-collection.firebaseapp.com",
+            databaseURL: "https://clan-data-collection-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "clan-data-collection",
+            storageBucket: "clan-data-collection.appspot.com",
+            messagingSenderId: "754150173194",
+            appId: "1:754150173194:web:a9f61985327107f810df33"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById('testBtn').onclick = () => {
+            document.getElementById('status').innerText = "Відправка...";
+            set(ref(db, 'test'), {
+                message: "Сервер працює!"
+            })
+            .then(() => {
+                document.getElementById('status').innerText = "Успіх! Перевір вкладку Data у Firebase.";
+            })
+            .catch((error) => {
+                document.getElementById('status').innerText = "Помилка: " + error.code;
+                console.error(error);
+            });
+        };
+    </script>
+</body>
+</html>
